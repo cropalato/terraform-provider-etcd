@@ -50,15 +50,10 @@ func Provider() *schema.Provider {
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
-	etcd_endpoints := strings.Split(d.Get("etcd_endpoint").(string), ",")
+	etcd_endpoints := strings.Split(d.Get("etcd_endpoints").(string), ",")
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Warning,
-		Summary:  "Warning Message Summary",
-		Detail:   "This is the detailed warning message from providerConfigure",
-	})
 	if (username != "") && (password != "") && func(endpointlist []string) bool {
 		for _, e := range endpointlist {
 			if e == "" {
@@ -74,7 +69,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 			Password:    password,
 		})
 		if err != nil {
-			return nil, diags
+			return nil, diag.FromErr(err)
 		}
 
 		return c, diags

@@ -25,6 +25,10 @@ func dataSourceKey() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceKeyRead,
 		Schema: map[string]*schema.Schema{
+			"key": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"endpoints": &schema.Schema{
 				Type:     schema.TypeList,
 				Computed: true,
@@ -59,32 +63,30 @@ func dataSourceKey() *schema.Resource {
 
 func dataSourceKeyRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
-	c := m.(*clientv3.Client)
-	if c == c {
-		fmt.Println("ops")
-	}
-
 	var diags diag.Diagnostics
 	var requestTimeout = 5 * time.Second
 
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{"localhost:2379"},
-		DialTimeout: requestTimeout,
-		Username:    "rmelo",
-		Password:    "rmelo",
-	})
-	if err != nil {
-		return append(diag.FromErr(err), diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Unable to create HashiCups client2",
-			Detail:   "Unable to auth user for authenticated HashiCups client3",
-		})
-		//return diag.FromErr(err)
-	}
-	defer cli.Close()
+	cli := m.(*clientv3.Client)
+
+	//cli, err := clientv3.New(clientv3.Config{
+	//	Endpoints:   []string{"localhost:2379"},
+	//	DialTimeout: requestTimeout,
+	//	Username:    "rmelo",
+	//	Password:    "rmelo",
+	//})
+	//if err != nil {
+	//	return append(diag.FromErr(err), diag.Diagnostic{
+	//		Severity: diag.Error,
+	//		Summary:  "Unable to create HashiCups client2",
+	//		Detail:   "Unable to auth user for authenticated HashiCups client3",
+	//	})
+	//	//return diag.FromErr(err)
+	//}
+	//defer cli.Close()
 
 	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
-	resp, err := cli.Get(ctx, "/foo")
+	key := fmt.Sprintf("%v", d.Get("key"))
+	resp, err := cli.Get(ctx, key)
 	cancel()
 	if err != nil {
 		return append(diag.FromErr(err), diag.Diagnostic{
