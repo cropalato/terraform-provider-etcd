@@ -1,0 +1,17 @@
+terraform {
+  required_providers {
+    etcd = {
+      source  = "github.com/cropalato/etcd"
+    }
+  }
+}
+
+provider "etcd" {
+}
+
+data "etcd_keys" "all" {
+}
+
+output "psl" {
+  value = data.etcd_keys.all
+}

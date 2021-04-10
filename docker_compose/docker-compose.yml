@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v2.3.8
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+        #    environment:
+        #      - ALLOW_NONE_AUTHENTICATION=yes
+        #    volumes:
+        #      - etcd_data:/bitnami/etcd
+volumes:
+  etcd_data:
+    driver: local
+
+
