@@ -39,9 +39,12 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("ETCD_ENDPOINTS", nil),
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"etcd_key":  resourceKey(),
+			"etcd_role": resourceRole(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"etcd_keys": dataSourceKey(),
+			"etcd_key": dataSourceKey(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

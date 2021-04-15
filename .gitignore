@@ -1,6 +1,7 @@
 **/Makefile
 **/vendor/*
 **/example/.terraform*
+**/example/terraform.tfstate*
 **/example/*log
 **/example/main.tf
 **/test/*

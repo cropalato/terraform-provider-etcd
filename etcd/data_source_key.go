@@ -2,10 +2,7 @@ package etcd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -14,11 +11,11 @@ import (
 )
 
 type Etcd_key struct {
-	Key             string
-	Value           string
-	Create_revision int64
-	Mod_revision    int64
-	Version         int64
+	Key   string
+	Value string
+	//Create_revision int64
+	//Mod_revision    int64
+	//Version         int64
 }
 
 func dataSourceKey() *schema.Resource {
@@ -29,33 +26,25 @@ func dataSourceKey() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"endpoints": &schema.Schema{
-				Type:     schema.TypeList,
+			"value": &schema.Schema{
+				Type:     schema.TypeString,
 				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"key": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"value": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"create_revision": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"mod_revision": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"version": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-					},
-				},
+			},
+			//"create_revision": &schema.Schema{
+			//	Type:     schema.TypeInt,
+			//	Computed: true,
+			//},
+			//"mod_revision": &schema.Schema{
+			//	Type:     schema.TypeInt,
+			//	Computed: true,
+			//},
+			//"version": &schema.Schema{
+			//	Type:     schema.TypeInt,
+			//	Computed: true,
+			//},
+			"last_updated": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -68,22 +57,6 @@ func dataSourceKeyRead(ctx context.Context, d *schema.ResourceData, m interface{
 
 	cli := m.(*clientv3.Client)
 
-	//cli, err := clientv3.New(clientv3.Config{
-	//	Endpoints:   []string{"localhost:2379"},
-	//	DialTimeout: requestTimeout,
-	//	Username:    "rmelo",
-	//	Password:    "rmelo",
-	//})
-	//if err != nil {
-	//	return append(diag.FromErr(err), diag.Diagnostic{
-	//		Severity: diag.Error,
-	//		Summary:  "Unable to create HashiCups client2",
-	//		Detail:   "Unable to auth user for authenticated HashiCups client3",
-	//	})
-	//	//return diag.FromErr(err)
-	//}
-	//defer cli.Close()
-
 	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
 	key := fmt.Sprintf("%v", d.Get("key"))
 	resp, err := cli.Get(ctx, key)
@@ -91,35 +64,51 @@ func dataSourceKeyRead(ctx context.Context, d *schema.ResourceData, m interface{
 	if err != nil {
 		return append(diag.FromErr(err), diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Unable to create HashiCups client2",
-			Detail:   "Unable to auth user for authenticated HashiCups client3",
+			Summary:  "Error reading data from etcd",
+			Detail:   "Failed calling cli.Get() from dataSourceKeyRead()",
 		})
 	}
 	if resp.Count == 0 {
-		d.Set("value", "WTF")
-		return diags
+		return append(diag.FromErr(err), diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Error reading data from etcd",
+			Detail:   "Etcd returns no answer. It is suppose to have at least one empty value.",
+		})
 	}
-	objmaparray := make([]map[string]interface{}, 0)
 	for _, ev := range resp.Kvs {
-		key := fmt.Sprintf("[{\"key\": \"%s\", \"value\": \"%s\", \"create_revision\": %d, \"mod_revision\": %d, \"version\": %d}]", string(ev.Key),
-			string(ev.Value), int(ev.CreateRevision),
-			int(ev.ModRevision), int(ev.Version))
-		err := json.NewDecoder(strings.NewReader(key)).Decode(&objmaparray)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		if err := d.Set("endpoints", objmaparray); err != nil {
+		if err := d.Set("value", string(ev.Value)); err != nil {
 			return append(diag.FromErr(err), diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "Unable to create HashiCups client2",
-				Detail:   "Unable to auth user for authenticated HashiCups client3",
+				Summary:  "Error reading data from etcd server",
+				Detail:   "Failed saving data into 'value'.",
 			})
 		}
+		//if err := d.Set("create_revision", int(ev.CreateRevision)); err != nil {
+		//	return append(diag.FromErr(err), diag.Diagnostic{
+		//		Severity: diag.Error,
+		//		Summary:  "Error reading data from etcd server",
+		//		Detail:   "Failed saving data into 'create_revision'.",
+		//	})
+		//}
+		//if err := d.Set("mod_revision", int(ev.ModRevision)); err != nil {
+		//	return append(diag.FromErr(err), diag.Diagnostic{
+		//		Severity: diag.Error,
+		//		Summary:  "Error reading data from etcd server",
+		//		Detail:   "Failed saving data into 'mod_revision'.",
+		//	})
+		//}
+		//if err := d.Set("version", int(ev.Version)); err != nil {
+		//	return append(diag.FromErr(err), diag.Diagnostic{
+		//		Severity: diag.Error,
+		//		Summary:  "Error reading data from etcd server",
+		//		Detail:   "Failed saving data into 'version'.",
+		//	})
+		//}
 		break
 	}
 
 	// always run
-	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+	d.SetId(key)
 
 	return diags
 }
