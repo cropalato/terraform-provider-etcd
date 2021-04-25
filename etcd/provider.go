@@ -40,9 +40,10 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"etcd_key":  resourceKey(),
-			"etcd_role": resourceRole(),
-			"etcd_user": resourceUser(),
+			"etcd_key":        resourceKey(),
+			"etcd_role":       resourceRole(),
+			"etcd_user":       resourceUser(),
+			"etcd_permission": resourcePermission(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"etcd_key": dataSourceKey(),
