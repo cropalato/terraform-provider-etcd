@@ -1,9 +1,9 @@
 **/Makefile
 **/vendor/*
-**/example/.terraform*
-**/example/terraform.tfstate*
-**/example/*log
-**/example/main.tf
+**/examples/.terraform*
+**/examples/terraform.tfstate*
+**/examples/*log
+**/examples/main.tf
 **/test/*
 **/go.sum
 **/go.mod
