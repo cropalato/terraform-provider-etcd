@@ -47,3 +47,4 @@ Create your main.tf using  main.tf.tmpl as reference and run the following comma
 $ terraform init && terraform apply
 ```
 
+
