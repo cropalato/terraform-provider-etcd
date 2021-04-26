@@ -32,7 +32,7 @@ $ go build -o terraform-provider-etcd
 First, build and install the provider.
 
 ```shell
-$ make install
+$ move Makefile.tmpl Makefile && make install
 ```
 
 Then, go to examples directory.
