@@ -3,12 +3,6 @@ on:
   push:
     tags:
       - "v*"
-builds:
-  - id: "terraform-provider-etcd"
-    goos:
-      - linux
-    goarch:
-      - amd64
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
