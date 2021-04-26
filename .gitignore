@@ -5,5 +5,3 @@
 **/examples/*log
 **/examples/main.tf
 **/test/*
-**/go.sum
-**/go.mod
