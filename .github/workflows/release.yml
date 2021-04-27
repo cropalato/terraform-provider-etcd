@@ -18,11 +18,11 @@ jobs:
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v3
-        env:
+        with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        env:
           # PASSPHRASE: ${{ secrets.PASSPHRASE }}
-          git-user-signingkey: true
-          git-commit-gpgsign: true
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
