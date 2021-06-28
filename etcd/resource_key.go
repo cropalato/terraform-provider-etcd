@@ -19,12 +19,14 @@ func resourceKey() *schema.Resource {
 		DeleteContext: resourceKeyDelete,
 		Schema: map[string]*schema.Schema{
 			"key": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "Etcd key",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			"value": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "Etcd value",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 			//"create_revision": &schema.Schema{
 			//	Type:     schema.TypeInt,
