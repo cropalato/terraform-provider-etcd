@@ -21,8 +21,8 @@ jobs:
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
         env:
-          # PASSPHRASE: ${{ secrets.PASSPHRASE }}
-          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          PASSPHRASE: ${{ secrets.PASSPHRASE }}
+          GPG_FINGERPRINT: ${{ secrets.GPG_FINGERPRINT }}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
@@ -30,7 +30,7 @@ jobs:
           args: release --rm-dist
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload assets
         uses: actions/upload-artifact@v2
         with:
