@@ -5,3 +5,4 @@
 **/examples/*log
 **/examples/main.tf
 **/test/*
+terraform-provider-etcd
