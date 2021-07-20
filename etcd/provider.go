@@ -53,7 +53,8 @@ func Provider() *schema.Provider {
 			"etcd_permission": resourcePermission(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"etcd_key": dataSourceKey(),
+			"etcd_key":       dataSourceKey(),
+			"etcd_keyprefix": dataSourceKeyPrefix(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

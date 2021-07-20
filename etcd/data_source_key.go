@@ -10,14 +10,6 @@ import (
 	"go.etcd.io/etcd/client/v3"
 )
 
-type Etcd_key struct {
-	Key   string
-	Value string
-	//Create_revision int64
-	//Mod_revision    int64
-	//Version         int64
-}
-
 func dataSourceKey() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceKeyRead,
