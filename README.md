@@ -14,3 +14,4 @@ Please check [/docs](https://github.com/cropalato/terraform-provider-etcd/tree/m
 
 If you are using a non trusted root CA, You should use SSL_CERT_DIR or SSL_CERT_FILE to choose a custom trusted bundle file.
 
+Adding a dummy line to remove
