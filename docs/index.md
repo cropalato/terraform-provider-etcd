@@ -28,6 +28,7 @@ provider "etcd" {
 
 ### Optional
 
+- **ca_cert** (String, Sensitive)
 - **endpoints** (String, Sensitive)
 - **password** (String, Sensitive)
 - **tls** (Boolean, Sensitive)

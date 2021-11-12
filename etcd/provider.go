@@ -14,7 +14,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"go.etcd.io/etcd/client/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/pkg/transport"
 )
 
@@ -42,6 +42,12 @@ func Provider() *schema.Provider {
 			"tls": &schema.Schema{
 				Type:        schema.TypeBool,
 				DefaultFunc: schema.EnvDefaultFunc("ETCD_TLS", true),
+				Optional:    true,
+				Sensitive:   true,
+			},
+			"ca_cert": &schema.Schema{
+				Type:        schema.TypeString,
+				DefaultFunc: schema.EnvDefaultFunc("ETCD_CACERT", nil),
 				Optional:    true,
 				Sensitive:   true,
 			},
@@ -78,7 +84,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	}(endpoints) == true {
 		if tls {
 			tlsInfo := transport.TLSInfo{
-				// TrustedCAFile: "/etc/ssl/certs/ca-certificates.crt",
+				TrustedCAFile: d.Get("ca_cert").(string),
 			}
 			tlsConfig, err := tlsInfo.ClientConfig()
 			if err != nil {
