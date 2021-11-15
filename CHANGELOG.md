@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.999999999] - 2021-11-12
+## [0.1.10] - 2021-11-15
+### Added
+- Added ca_cert parameter example. 
+- Added darwin support
+
+## [0.1.9] - 2021-11-12
 ### Added
 - Added ca_cert parameter. ([#1](https://github.com/cropalato/terraform-provider-etcd/issues/1))
 
