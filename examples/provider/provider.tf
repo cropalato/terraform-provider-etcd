@@ -6,4 +6,5 @@ provider "etcd" {
   # The provider will connect using a tls session. But for some weird reason 
   # you decide skip that you can set tls to false
   # tls           = var.tls         # optionally use ETCD_TLS env var
+  # ca_cert       = var.ca_cert     # optionally use ETCD_CACERT env var
 }
