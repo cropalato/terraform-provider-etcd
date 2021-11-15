@@ -18,9 +18,11 @@ builds:
     goos:
       - windows
       - linux
-        #      - darwin
+      - darwin
     goarch:
       - amd64
+      - arm
+      - arm64
     binary: "{{ .ProjectName }}"
 archives:
   - format: zip
