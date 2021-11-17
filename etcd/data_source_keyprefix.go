@@ -109,7 +109,7 @@ func dataSourceKeyPrefixRead(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	// always run
-	d.SetId(prefix)
+	d.SetId(uuidGenerator())
 
 	return diags
 }

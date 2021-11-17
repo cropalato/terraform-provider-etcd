@@ -94,7 +94,7 @@ func resourcePermissionCreate(ctx context.Context, d *schema.ResourceData, m int
 	}
 
 	// always run
-	d.SetId(fmt.Sprintf("%v_%v_%v", role, key, permission))
+	d.SetId(uuidGenerator())
 
 	resourceUserRead(ctx, d, m)
 
@@ -131,7 +131,7 @@ func resourcePermissionRead(ctx context.Context, d *schema.ResourceData, m inter
 		}
 		d.Set("endrange", string(p.RangeEnd))
 		d.Set("permission", fmt.Sprintf("%v", p.PermType))
-		d.SetId(fmt.Sprintf("%v_%v_%v", role, key, p.PermType))
+		d.SetId(uuidGenerator())
 	}
 
 	return append(diags, diag.Diagnostic{
@@ -182,7 +182,7 @@ func resourcePermissionUpdate(ctx context.Context, d *schema.ResourceData, m int
 	}
 
 	// always run
-	d.SetId(fmt.Sprintf("%v_%v_%v", role, key, permission))
+	d.SetId(uuidGenerator())
 
 	resourceUserRead(ctx, d, m)
 

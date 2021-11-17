@@ -109,7 +109,7 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 	// always run
-	d.SetId(name)
+	d.SetId(uuidGenerator())
 
 	resourceUserRead(ctx, d, m)
 
@@ -139,7 +139,7 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		})
 	}
 	// always run
-	d.SetId(name)
+	d.SetId(uuidGenerator())
 
 	return diags
 }

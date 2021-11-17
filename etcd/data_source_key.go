@@ -100,7 +100,7 @@ func dataSourceKeyRead(ctx context.Context, d *schema.ResourceData, m interface{
 	}
 
 	// always run
-	d.SetId(key)
+	d.SetId(uuidGenerator())
 
 	return diags
 }

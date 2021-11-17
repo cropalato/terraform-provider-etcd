@@ -93,7 +93,7 @@ func resourceKeyCreate(ctx context.Context, d *schema.ResourceData, m interface{
 		})
 	}
 	// always run
-	d.SetId(key)
+	d.SetId(uuidGenerator())
 
 	resourceKeyRead(ctx, d, m)
 
@@ -176,7 +176,7 @@ func resourceKeyRead(ctx context.Context, d *schema.ResourceData, m interface{})
 	}
 
 	// always run
-	d.SetId(key)
+	d.SetId(uuidGenerator())
 
 	return diags
 }
