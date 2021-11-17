@@ -9,8 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"go.etcd.io/etcd/client/v3"
-	//"go.etcd.io/etcd/client/v3/concurrency"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 var (
@@ -36,18 +35,6 @@ func resourceUser() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			//"key": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"withPrefix": &schema.Schema{
-			//	Type:     schema.TypeBool,
-			//	Optional: true,
-			//},
-			//"permission": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Optional: true,
-			//},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

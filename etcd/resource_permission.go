@@ -7,8 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"go.etcd.io/etcd/client/v3"
-	//"go.etcd.io/etcd/client/v3/concurrency"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func resourcePermission() *schema.Resource {
@@ -73,12 +72,12 @@ func resourcePermissionCreate(ctx context.Context, d *schema.ResourceData, m int
 		if rangeEnd == "" {
 			return append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "Resource Permission error.",
+				Summary:  "resourcePermissionCreate error.",
 				Detail:   fmt.Sprintf("'endrange' is a mandatory argument when you define 'withprefix' == false."),
 			})
 		}
 	}
-	if fmt.Sprintf("%v", d.Get("role")) == "READWRITE" {
+	if fmt.Sprintf("%v", d.Get("permission")) == "READWRITE" {
 		permission = clientv3.PermissionType(clientv3.PermReadWrite)
 	} else {
 		permission = clientv3.PermissionType(clientv3.PermRead)
@@ -88,7 +87,7 @@ func resourcePermissionCreate(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return append(diag.FromErr(err), diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Resource Permission error.",
+			Summary:  "resourcePermissionCreate error.",
 			Detail:   fmt.Sprintf("Failed creating permission: %v to key: %v into role: %v", permission, key, role),
 		})
 	}
@@ -111,12 +110,12 @@ func resourcePermissionRead(ctx context.Context, d *schema.ResourceData, m inter
 
 	role := fmt.Sprintf("%v", d.Get("role"))
 	key := fmt.Sprintf("%v", d.Get("key"))
-	resp, err := cli.RoleGet(ctx, "root")
+	resp, err := cli.RoleGet(ctx, role)
 	cancel()
 	if err != nil {
 		return append(diag.FromErr(err), diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Resource Permission error.",
+			Summary:  "resourcePermissionRead error.",
 			Detail:   fmt.Sprintf("Failed getting role: %v", role),
 		})
 	}
@@ -129,16 +128,11 @@ func resourcePermissionRead(ctx context.Context, d *schema.ResourceData, m inter
 		} else {
 			d.Set("withPrefix", false)
 		}
-		d.Set("endrange", string(p.RangeEnd))
 		d.Set("permission", fmt.Sprintf("%v", p.PermType))
 		d.SetId(uuidGenerator())
 	}
 
-	return append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Summary:  "Resource Permission error.",
-		Detail:   fmt.Sprintf("Failed getting permission for key: %v from role: %v", key, role),
-	})
+	return diags
 }
 
 func resourcePermissionUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -161,7 +155,7 @@ func resourcePermissionUpdate(ctx context.Context, d *schema.ResourceData, m int
 		if rangeEnd == "" {
 			return append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "Resource Permission error.",
+				Summary:  "resourcePermissionUpdate error.",
 				Detail:   fmt.Sprintf("'endrange' is a mandatory argument when you define 'withprefix' == false."),
 			})
 		}
@@ -184,8 +178,6 @@ func resourcePermissionUpdate(ctx context.Context, d *schema.ResourceData, m int
 	// always run
 	d.SetId(uuidGenerator())
 
-	resourceUserRead(ctx, d, m)
-
 	return diags
 
 }
@@ -200,14 +192,14 @@ func resourcePermissionDelete(ctx context.Context, d *schema.ResourceData, m int
 
 	role := fmt.Sprintf("%v", d.Get("role"))
 	key := fmt.Sprintf("%v", d.Get("key"))
-	//withPrefix := d.Get("withprefix").(bool)
 	rangeEnd := d.Get("endrange").(string)
-	resp, err := cli.RoleGet(ctx, "root")
+
+	resp, err := cli.RoleGet(ctx, role)
 	cancel()
 	if err != nil {
 		return append(diag.FromErr(err), diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Resource Permission error.",
+			Summary:  "resourcePermissionDelete error.",
 			Detail:   fmt.Sprintf("Failed getting role: %v", role),
 		})
 	}
@@ -221,16 +213,11 @@ func resourcePermissionDelete(ctx context.Context, d *schema.ResourceData, m int
 		if err != nil {
 			return append(diag.FromErr(err), diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "Resource Permission error.",
+				Summary:  "resourcePermissionDelete error.",
 				Detail:   fmt.Sprintf("Failed revoking permission to key: %v from role: %v", key, role),
 			})
 		}
-		return diags
 	}
 
-	return append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Summary:  "Resource Permission error.",
-		Detail:   fmt.Sprintf("Failed getting permission for key: %v from role: %v", key, role),
-	})
+	return diags
 }

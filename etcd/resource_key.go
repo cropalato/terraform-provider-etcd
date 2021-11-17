@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"go.etcd.io/etcd/client/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.etcd.io/etcd/client/v3/concurrency"
 )
 
@@ -28,26 +28,6 @@ func resourceKey() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
-			//"create_revision": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Computed: true,
-			//	Optional: true,
-			//},
-			//"mod_revision": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Computed: true,
-			//	Optional: true,
-			//},
-			//"version": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Computed: true,
-			//	Optional: true,
-			//},
-			//"last_updated": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//	Computed: true,
-			//},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,

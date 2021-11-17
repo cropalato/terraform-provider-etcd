@@ -22,18 +22,6 @@ func resourceRole() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			//"key": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"withPrefix": &schema.Schema{
-			//	Type:     schema.TypeBool,
-			//	Optional: true,
-			//},
-			//"permission": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Optional: true,
-			//},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
