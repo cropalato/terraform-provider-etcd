@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"go.etcd.io/etcd/client/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Etcd_key struct {
@@ -36,18 +36,6 @@ func dataSourceKeyPrefix() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						//"create_revision": &schema.Schema{
-						//	Type:     schema.TypeInt,
-						//	Computed: true,
-						//},
-						//"mod_revision": &schema.Schema{
-						//	Type:     schema.TypeInt,
-						//	Computed: true,
-						//},
-						//"version": &schema.Schema{
-						//	Type:     schema.TypeInt,
-						//	Computed: true,
-						//},
 					},
 				},
 			},
@@ -109,7 +97,7 @@ func dataSourceKeyPrefixRead(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	// always run
-	d.SetId(prefix)
+	d.SetId(uuidGenerator())
 
 	return diags
 }

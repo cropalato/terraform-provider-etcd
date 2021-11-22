@@ -22,18 +22,6 @@ func resourceRole() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			//"key": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"withPrefix": &schema.Schema{
-			//	Type:     schema.TypeBool,
-			//	Optional: true,
-			//},
-			//"permission": &schema.Schema{
-			//	Type:     schema.TypeInt,
-			//	Optional: true,
-			//},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -69,7 +57,7 @@ func resourceRoleCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 	// always run
-	d.SetId(name)
+	d.SetId(uuidGenerator())
 
 	resourceRoleRead(ctx, d, m)
 
@@ -99,7 +87,7 @@ func resourceRoleRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		})
 	}
 	// always run
-	d.SetId(name)
+	d.SetId(uuidGenerator())
 
 	return diags
 }
@@ -164,7 +152,7 @@ func resourceRoleUpdate(ctx context.Context, d *schema.ResourceData, m interface
 
 	// always run
 	d.Set("name", fmt.Sprintf("%v", new_value))
-	d.SetId(fmt.Sprintf("%v", new_value))
+	d.SetId(uuidGenerator())
 	resourceRoleRead(ctx, d, m)
 	return diags
 
