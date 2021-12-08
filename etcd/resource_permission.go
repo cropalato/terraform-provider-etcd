@@ -160,7 +160,7 @@ func resourcePermissionUpdate(ctx context.Context, d *schema.ResourceData, m int
 			})
 		}
 	}
-	if fmt.Sprintf("%v", d.Get("role")) == "READWRITE" {
+	if fmt.Sprintf("%v", d.Get("permission")) == "READWRITE" {
 		permission = clientv3.PermissionType(clientv3.PermReadWrite)
 	} else {
 		permission = clientv3.PermissionType(clientv3.PermRead)
